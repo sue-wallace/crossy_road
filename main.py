@@ -10,6 +10,7 @@ screen.tracer(0)
 
 player = Player()
 car_manager = CarManager()
+scoreboard = Scoreboard()
 
 screen.listen()
 
@@ -19,31 +20,25 @@ player.reset_position()
 
 game_is_on = True
 while game_is_on:
-    time.sleep(car_manager.car_speed)
+    time.sleep(0.1)
     screen.update()
 
     car_manager.create_cars()
     car_manager.move_cars()
-
 
     # detect collision of turtle with a car
 
     for car in car_manager.all_cars:
         if car.distance(player) < 20:
             game_is_on = False
+            scoreboard.game_over()
 
-    # detect turtle reaching other side
+    # detect turtle reaching other side, start new level
 
-    if player.ycor() == 280:
-        print('Successful crossing')
+    if player.ycor() > 280:
         player.reset_position()
-        # recreate cars and speed up the cars
-        car_manager.create_cars()
-        car_manager.move_cars()
-        car_manager.speed_up()
-
-
-
+        car_manager.level_up()
+        scoreboard.increase_level()
 
 screen.exitonclick()
 
